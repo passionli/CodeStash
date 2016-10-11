@@ -1,0 +1,32 @@
+#include "stdio.h"
+
+void DumpCallStack(){
+    unsigned uesp, uebp;
+    __asm
+    {
+            mov uesp, esp
+            mov uebp, ebp
+    }
+
+    FILE* fp;
+    fp = fopen("call-stack.txt", "w");
+
+    int i = 0;
+    unsigned int *pESP = (unsigned int *)uesp;
+    unsigned int *pEBP = (unsigned int *)uebp;
+    while (pEBP)
+    {
+        fprintf(fp, "%p %8p\n", pESP, *pESP);
+        if (pESP == pEBP)
+        {
+            fprintf(fp, "\nAbove is Frame #%x (EBP)=%p, Return Address=%p\n\n", i, pEBP, *(pEBP+1));
+            //write return address to wreck call stack
+            //*(pEBP + 1) = (unsigned int)ReadRegisterVal;
+            pEBP = (unsigned int *)*pEBP;
+            i++;
+        }
+
+        pESP++;
+    }
+    fclose(fp);
+}
