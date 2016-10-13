@@ -1,0 +1,24 @@
+int LG_strlen(const char *pcSrc){
+	int iLength = 0;
+	
+	while (*pcSrc++)
+	{
+		++iLength;
+	}
+
+	return iLength;
+}
+
+int LG_strcmp(const char *pcSrc, const char *pcDst){
+	int iRet = 0;
+
+	while (!(iRet = (*pcSrc-*pcDst)) && *pcSrc)
+		++pcSrc,++pcDst;
+
+	if (iRet < 0)
+		iRet = -1;
+	else if(iRet > 0)
+		iRet = 1;
+
+	return(iRet);
+}
